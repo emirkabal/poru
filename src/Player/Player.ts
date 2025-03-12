@@ -687,7 +687,7 @@ export class Player extends EventEmitter {
    * @returns {Promise<Response>} - A Promise that resolves to a Response object containing the resolved tracks.
    */
   public async resolve({ query, source, requester }: ResolveOptions): Promise<Response> {
-    const response = await this.node.rest.get<LoadTrackResponse>(`/v4/loadtracks?identifier=${encodeURIComponent((this.startsWithMultiple(query, ["https://", "http://"]) ? '' : `${source || 'ytsearch'}:`) + query)}`) ?? { loadType: "empty", data: {} };
+    const response = await this.node.rest.get<LoadTrackResponse>(`/v4/loadtracks?identifier=${encodeURIComponent((this.startsWithMultiple(query, ["https://", "http://"]) ? '' : `${source || 'ytsearch'}:`) + query)}`) ?? { loadType: "empty", data: {}, pluginInfo: {} };
 
     return new Response(response, requester);
   };

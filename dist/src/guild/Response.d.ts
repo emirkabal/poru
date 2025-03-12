@@ -1,6 +1,26 @@
 import { Track, trackData } from "./Track";
 export type LavaLinkLoadTypes = "track" | "playlist" | "search" | "empty" | "error";
 export type Severity = "common" | "suspicious" | "fault";
+export interface PluginInfo {
+    type?: "album" | "playlist" | "artist" | "recommendations" | (string & {});
+    albumName?: string;
+    albumUrl?: string;
+    albumArtUrl?: string;
+    artistUrl?: string;
+    artistArtworkUrl?: string;
+    previewUrl?: string;
+    isPreview?: boolean;
+    totalTracks?: number;
+    identifier?: string;
+    artworkUrl?: string;
+    author?: string;
+    url?: string;
+    uri?: string;
+    clientData?: {
+        previousTrack?: boolean;
+        [key: string]: any;
+    };
+}
 export interface PlaylistInfo {
     type: "playlist";
     name: string;
@@ -14,14 +34,17 @@ export interface NoPlaylistInfo {
 export interface LoadTrackResponseTrack {
     loadType: "track";
     data: trackData;
+    pluginInfo: PluginInfo;
 }
 export interface LoadTrackResponseSearch {
     loadType: "search";
     data: trackData[];
+    pluginInfo: PluginInfo;
 }
 export interface LoadTrackResponseEmpty {
     loadType: "empty";
     data: {};
+    pluginInfo: PluginInfo;
 }
 export interface LoadTrackResponseError {
     loadType: "error";
@@ -30,6 +53,7 @@ export interface LoadTrackResponseError {
         severity: Severity;
         cause: string;
     };
+    pluginInfo: PluginInfo;
 }
 export interface LoadTrackResponsePlaylist {
     loadType: "playlist";
@@ -46,7 +70,7 @@ export interface LoadTrackResponsePlaylist {
              * The selected track of the playlist (-1 if no track is selected)
              */
             selectedTrack: number;
-        };
+        } & Partial<PlaylistInfo>;
         /**
          * Addition playlist info provided by plugins
          */
@@ -56,12 +80,14 @@ export interface LoadTrackResponsePlaylist {
          */
         tracks: trackData[];
     };
+    pluginInfo: PluginInfo;
 }
 export type LoadTrackResponse = LoadTrackResponseTrack | LoadTrackResponseSearch | LoadTrackResponseEmpty | LoadTrackResponseError | LoadTrackResponsePlaylist;
 export declare class Response {
     tracks: Track[];
     loadType: LavaLinkLoadTypes;
     playlistInfo: PlaylistInfo | NoPlaylistInfo;
+    pluginInfo: PluginInfo;
     constructor(response: LoadTrackResponse, requester: any);
     private handleTracks;
     private convertNodelinkResponseToLavalink;

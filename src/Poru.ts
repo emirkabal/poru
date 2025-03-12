@@ -556,7 +556,7 @@ export class Poru extends EventEmitter {
         if (!node) node = this.leastUsedNodes[0];
         if (!node) throw new Error("No nodes are available.");
 
-        const response = (await node.rest.get<LoadTrackResponse>(`/v4/loadtracks?identifier=${encodeURIComponent((this.startsWithMultiple(query, ["https://", "http://"]) ? '' : `${source || this?.options?.defaultPlatform || 'ytsearch'}:`) + query)}`)) ?? { loadType: "empty", data: {} };
+        const response = (await node.rest.get<LoadTrackResponse>(`/v4/loadtracks?identifier=${encodeURIComponent((this.startsWithMultiple(query, ["https://", "http://"]) ? '' : `${source || this?.options?.defaultPlatform || 'ytsearch'}:`) + query)}`)) ?? { loadType: "empty", data: {}, pluginInfo: {} };
 
         return new Response(response, requester);
     }
