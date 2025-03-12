@@ -9,12 +9,13 @@ class Response {
     pluginInfo;
     constructor(response, requester) {
         response.loadType = this.convertNodelinkResponseToLavalink(response.loadType);
-        const { loadType, data } = response;
+        const { loadType, data, pluginInfo } = response;
         switch (loadType) {
             case "playlist": {
                 this.tracks = this.handleTracks(data.tracks, requester);
                 this.playlistInfo = {
                     ...data.info,
+                    ...data.pluginInfo,
                     type: "playlist",
                 };
                 break;
@@ -36,7 +37,7 @@ class Response {
             }
         }
         this.loadType = loadType;
-        this.pluginInfo = response?.pluginInfo ?? {};
+        this.pluginInfo = pluginInfo ?? {};
     }
     handleTracks(data, requester) {
         if (Array.isArray(data)) {

@@ -39,6 +39,9 @@ export interface NoPlaylistInfo {
   selectedTrack?: 0;
 }
 
+export type PlaylistInfoType = (PlaylistInfo | NoPlaylistInfo) &
+  Partial<PluginInfo>;
+
 export interface LoadTrackResponseTrack {
   loadType: "track";
   data: trackData;
@@ -107,7 +110,7 @@ export type LoadTrackResponse =
 export class Response {
   public tracks: Track[];
   public loadType: LavaLinkLoadTypes;
-  public playlistInfo: PlaylistInfo | NoPlaylistInfo;
+  public playlistInfo: PlaylistInfoType;
   public pluginInfo: PluginInfo;
 
   constructor(response: LoadTrackResponse, requester: any) {
@@ -115,13 +118,14 @@ export class Response {
       response.loadType
     );
 
-    const { loadType, data } = response;
+    const { loadType, data, pluginInfo } = response;
 
     switch (loadType) {
       case "playlist": {
         this.tracks = this.handleTracks(data.tracks, requester);
         this.playlistInfo = {
           ...data.info,
+          ...data.pluginInfo,
           type: "playlist",
         };
 
@@ -149,7 +153,7 @@ export class Response {
     }
 
     this.loadType = loadType;
-    this.pluginInfo = response?.pluginInfo ?? {};
+    this.pluginInfo = pluginInfo ?? {};
   }
 
   private handleTracks(data: trackData | trackData[], requester: any) {

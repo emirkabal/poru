@@ -31,6 +31,7 @@ export interface NoPlaylistInfo {
     name?: null;
     selectedTrack?: 0;
 }
+export type PlaylistInfoType = (PlaylistInfo | NoPlaylistInfo) & Partial<PluginInfo>;
 export interface LoadTrackResponseTrack {
     loadType: "track";
     data: trackData;
@@ -86,7 +87,7 @@ export type LoadTrackResponse = LoadTrackResponseTrack | LoadTrackResponseSearch
 export declare class Response {
     tracks: Track[];
     loadType: LavaLinkLoadTypes;
-    playlistInfo: PlaylistInfo | NoPlaylistInfo;
+    playlistInfo: PlaylistInfoType;
     pluginInfo: PluginInfo;
     constructor(response: LoadTrackResponse, requester: any);
     private handleTracks;
